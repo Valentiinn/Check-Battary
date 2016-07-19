@@ -5,7 +5,8 @@ import java.util.Timer;
 
 public class MainForm extends JFrame {
     private Timer timer = new Timer();
-    private Task task = new Task();
+    private Battery batteryChargeLevel = BatteryChargeLevel.getInstance();
+    private Task task = Task.getInstance(batteryChargeLevel);
 
     public MainForm() {
         super("Basic Layouts");

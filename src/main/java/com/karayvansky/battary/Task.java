@@ -3,12 +3,22 @@ package com.karayvansky.battary;
 import javax.swing.*;
 import java.awt.*;
 import java.util.TimerTask;
-import java.util.Timer;
+
 
 public class Task extends TimerTask {
-    private BatteryChargeLevel batteryChargeLevelfirst = new BatteryChargeLevel();
-    private Timer timer = new Timer();
+    Battery batteryChargeLevelfirst;
     private Toolkit toolkit = Toolkit.getDefaultToolkit();
+    private static Task instance = null;
+
+    private Task(Battery batteryChargeLevelfirst) {
+        this.batteryChargeLevelfirst = batteryChargeLevelfirst;
+    }
+
+    public static Task getInstance(Battery batteryChargeLevelfirst) {
+        if (instance == null)
+            instance = new Task(batteryChargeLevelfirst);
+        return instance;
+    }
 
     @Override
     public void run() {
@@ -17,11 +27,18 @@ public class Task extends TimerTask {
 
     public void messageDialog() {
 
-        double firstvalueBattery = batteryChargeLevelfirst.valueBattery();
+        double valueBattery = batteryChargeLevelfirst.valueBattery();
 
-        while (firstvalueBattery <= 37 & !batteryChargeLevelfirst.power()) {
+        if (valueBattery > 81 & batteryChargeLevelfirst.power()) {
             toolkit.beep();
-            JOptionPane.showMessageDialog(null, "Поставь ноутбук на зарядку! Осталось " + firstvalueBattery + " %",
+            JOptionPane.showMessageDialog(null, "Отсоедините ноутбук от зарядки! Уже " + valueBattery + " %",
+                    "Battary warning", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        while (batteryChargeLevelfirst.valueBattery() <= 37 & !batteryChargeLevelfirst.power()) {
+            toolkit.beep();
+            JOptionPane.showMessageDialog(null, "Подключите ноутбук на зарядку! Осталось " + valueBattery + " %",
                     "Battary warning", JOptionPane.ERROR_MESSAGE);
             return;
         }

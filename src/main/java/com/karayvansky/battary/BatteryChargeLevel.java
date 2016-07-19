@@ -4,7 +4,20 @@ import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.PowerSource;
 
-public class BatteryChargeLevel {
+public class BatteryChargeLevel implements Battery {
+
+    private static BatteryChargeLevel instance = null;
+
+    private BatteryChargeLevel() {
+
+    }
+
+    public static BatteryChargeLevel getInstance() {
+        if (instance == null)
+            instance = new BatteryChargeLevel();
+        return instance;
+    }
+
 
     public double valueBattery() {
         double value = 0;
